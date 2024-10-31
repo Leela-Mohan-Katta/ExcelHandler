@@ -1,0 +1,103 @@
+Here's a concise documentation for the Spring Boot application that processes Excel files based on your requirements. This documentation includes the overview, setup instructions, API details, and examples.
+
+---
+
+# Excel Handler Spring Boot Application Documentation
+
+## Overview
+The Excel Handler application is a Spring Boot-based service designed to process Excel files containing formulas and corresponding values. It reads data from two sheets in an Excel workbook:
+1. **Sheet 1**: Contains formulas in the format `NWA=A1+A2+A3+...`
+2. **Sheet 2**: Contains cell references (e.g., `A1`, `A2`) along with their numerical values.
+
+The application outputs a formatted string combining an ID, the formula name, the word "TOTAL," and the numerical values associated with the formula.
+
+## Prerequisites
+- Java 8 installed on your system.
+- Apache POI library for handling Excel files.
+- Spring Boot framework set up in your IDE (e.g., Eclipse).
+
+## Project Structure
+```
+excelhandler/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── excelhandler/
+│   │   │           ├── ExcelhandlerApplication.java
+│   │   │           ├── ExcelController.java
+│   │   │           └── ExcelService.java
+│   │   └── resources/
+│   │       └── yourfile.xlsx
+│   └── test/
+└── pom.xml
+```
+
+## Setup Instructions
+1. **Clone or Download**: Clone the repository or download the project files.
+2. **Add Excel File**: Place your Excel file (e.g., `yourfile.xlsx`) in the `src/main/resources` directory.
+3. **Dependencies**: Ensure that the following dependencies are included in your `pom.xml`:
+   ```xml
+   <dependencies>
+       <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-starter-web</artifactId>
+       </dependency>
+       <dependency>
+           <groupId>org.apache.poi</groupId>
+           <artifactId>poi-ooxml</artifactId>
+           <version>5.0.0</version>
+       </dependency>
+   </dependencies>
+   ```
+4. **Run the Application**:
+   - Open `ExcelhandlerApplication.java` in your IDE.
+   - Run the application. This will start the Spring Boot server on port 8080.
+
+## API Endpoint
+### Process Excel
+- **URL**: `/processExcel`
+- **Method**: `GET`
+- **Parameters**:
+  - `filePath`: The path to the Excel file (relative to the resources folder).
+- **Example**:
+  ```
+  GET http://localhost:8080/processExcel?filePath=src/main/resources/yourfile.xlsx
+  ```
+
+### Response
+The response will be a JSON object with the formula and its corresponding values in the following format:
+```json
+{
+  "NWA=A1+A2+A3": "911|NWA|TOTAL|1, 2, 3"
+}
+```
+
+## Excel File Structure
+### Sheet 1: Formulas
+| ID  | Formula          |
+|-----|------------------|
+| 911 | NWA=A1+A2+A3     |
+
+### Sheet 2: Values
+| Cell Reference | Value |
+|----------------|-------|
+| A1             | 1     |
+| A2             | 2     |
+| A3             | 3     |
+
+## Example Use Case
+1. **Input**: An Excel file structured as above, located in `src/main/resources/yourfile.xlsx`.
+2. **API Call**: Accessing `http://localhost:8080/processExcel?filePath=src/main/resources/yourfile.xlsx`.
+3. **Output**: The application processes the formulas and returns:
+   ```json
+   {
+     "NWA=A1+A2+A3": "911|NWA|TOTAL|1, 2, 3"
+   }
+   ```
+
+## Notes
+- Ensure that your Excel file follows the specified structure for the application to process the data correctly.
+- This application is configured to handle integer values from the Excel sheet.
+
+---
